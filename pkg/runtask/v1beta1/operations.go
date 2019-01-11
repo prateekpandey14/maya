@@ -13,3 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+package v1beta1
+
+import (
+	apis "github.com/openebs/maya/pkg/apis/openebs.io/runtask/v1beta1"
+)
+
+// Operations abstracts all possible operations against runtask instance
+type Operations interface {
+	Get(name string) (*apis.RunTask, error)
+}

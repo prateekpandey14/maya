@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"encoding/json"
+
 	"github.com/golang/glog"
 	apis "github.com/openebs/maya/pkg/apis/openebs.io/v1alpha1"
 	"github.com/openebs/maya/pkg/util"
@@ -188,20 +189,49 @@ func GetVolumes() ([]string, error) {
 	return volNames, nil
 }
 
+func GetSnapshots(fullVolName string) (string, error) {
+	volSnapCmd := []string{"list", "-Hrt", "snapshot", "-o", "name", fullVolName}
+	SnapByte, err := RunnerVar.RunStdoutPipe(VolumeReplicaOperator, volSnapCmd...)
+	if err != nil {
+		glog.Errorf("Unable to get volume snapshots:%v", string(SnapByte[:]))
+		return "", err
+	}
+	return string(SnapByte[:]), nil
+}
+
 // DeleteVolume deletes the specified volume.
 func DeleteVolume(fullVolName string) error {
-	deleteVolStr := []string{"destroy", "-R", fullVolName}
-	stdoutStderr, err := RunnerVar.RunCombinedOutput(VolumeReplicaOperator, deleteVolStr...)
-	if err != nil {
-		// If volume is missing then do not return error
-		if strings.Contains(err.Error(), "dataset does not exist") {
-			glog.Infof("Assuming volume deletion successful for error: %v", string(stdoutStderr))
-			return nil
+	snapshots, _ := GetSnapshots(fullVolName)
+	if len(snapshots) == 0 {
+		deleteVolStr := []string{"destroy", "-R", fullVolName}
+		stdoutStderr, err := RunnerVar.RunCombinedOutput(VolumeReplicaOperator, deleteVolStr...)
+		if err != nil {
+			// If volume is missing then do not return error
+			if strings.Contains(err.Error(), "dataset does not exist") {
+				glog.Infof("Assuming volume deletion successful for error: %v", string(stdoutStderr))
+				return nil
+			}
+			glog.Errorf("Unable to delete volume : %v", string(stdoutStderr))
+			return err
 		}
-		glog.Errorf("Unable to delete volume : %v", string(stdoutStderr))
-		return err
+		return nil
+	} else {
+		deleteVolStr := []string{"destroy", "-r", fullVolName}
+		stdoutStderr, err := RunnerVar.RunCombinedOutput(VolumeReplicaOperator, deleteVolStr...)
+		if err != nil {
+			// If volume is missing then do not return error
+			if strings.Contains(err.Error(), "dataset does not exist") {
+				glog.Infof("Assuming volume deletion successful for error: %v", string(stdoutStderr))
+				return nil
+			}
+			if strings.Contains(err.Error(), "volume has dependent clones") {
+				return fmt.Errorf("deletion failed: %v", string(stdoutStderr))
+			}
+			return fmt.Errorf("deletion failed: %v", string(stdoutStderr))
+		}
+		return nil
 	}
-	return nil
+	//return fmt.Errorf("volume can't be deleted, snapshot exits : %v", string(snapshots))
 }
 
 // parseCapacityUnit add support for backward compatibility with respect to capacity units
