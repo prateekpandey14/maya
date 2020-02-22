@@ -20,6 +20,6 @@ jobs:
         path: go/src/github.com/openebs/maya
 
     - name: Verify kubegen
-      run: make kubegen
+      run: make kubegen1
       env:
         GOPATH: /home/runner/work/maya/go
