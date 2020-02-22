@@ -22,4 +22,4 @@ jobs:
     - name: Verify kubegen
       run: make kubegen
       env:
-        GOPATH: /home/runner/work/maya/maya/go
+        GOPATH: /home/runner/work/maya/go
