@@ -28,3 +28,8 @@ jobs:
       run: bash ./buildscripts/test-cov.sh
       env:
         GOPATH: /home/runner/work/maya/go
+       
+    - name: verify all
+      run: bash ./buildscripts/travis-build.sh
+      env:
+        GOPATH: /home/runner/work/maya/go
