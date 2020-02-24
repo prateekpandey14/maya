@@ -36,6 +36,8 @@ jobs:
       run: bash ./buildscripts/travis-build.sh
       env:
         GOPATH: /home/runner/work/maya/go
+      shell: bash
 
     - name: check gopath/bin
-      run: ls $(go env GOPATH)/bin/
+      shell: bash
+      run: ls -ltr /home/runner/work/maya/go/bin/
