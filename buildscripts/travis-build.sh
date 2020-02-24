@@ -21,18 +21,18 @@ function checkGitDiff() {
 	if [[ `git diff --shortstat | wc -l` != 0 ]]; then echo "Some files got changed after $1";printf "\n";git diff --stat;printf "\n"; exit 1; fi
 }
 
-if [ "$SRC_REPO" != "$DST_REPO" ];
-then
-	echo "Copying from $SRC_REPO to $DST_REPO"
+#if [ "$SRC_REPO" != "$DST_REPO" ];
+#then
+#	echo "Copying from $SRC_REPO to $DST_REPO"
 	# Get the git commit
-	echo "But first, get the git revision from $SRC_REPO"
-	GIT_COMMIT="$(git rev-parse HEAD)"
-	echo $GIT_COMMIT >> $SRC_REPO/GITCOMMIT
+#	echo "But first, get the git revision from $SRC_REPO"
+#	GIT_COMMIT="$(git rev-parse HEAD)"
+#	echo $GIT_COMMIT >> $SRC_REPO/GITCOMMIT
 
-	mkdir -p $DST_REPO
-	cp -R $SRC_REPO/* $DST_REPO/
-	cd $DST_REPO
-fi
+#	mkdir -p $DST_REPO
+#	cp -R $SRC_REPO/* $DST_REPO/
+#	cd $DST_REPO
+#fi
 
 #make golint-travis
 #rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
