@@ -23,3 +23,8 @@ jobs:
       run: make kubegen1
       env:
         GOPATH: /home/runner/work/maya/go
+
+    - name: verify unit tests
+      run: make test
+      env:
+        GOPATH: /home/runner/work/maya/go
