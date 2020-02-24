@@ -19,8 +19,8 @@ jobs:
         fetch-depth: 1
         path: go/src/github.com/openebs/maya
 
-    - name: Verify kubegen
-      run: make kubegen1
+    - name: Install Go Dep
+      run: 	go get github.com/golang/dep/cmd/dep
       env:
         GOPATH: /home/runner/work/maya/go
 
