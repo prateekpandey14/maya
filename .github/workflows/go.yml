@@ -20,13 +20,11 @@ jobs:
         path: go/src/github.com/openebs/maya
 
     - name: Install Go Dep
-      run: 	go get github.com/golang/dep/cmd/dep
+      run: make bootstrap
       env:
         GOPATH: /home/runner/work/maya/go
 
     - name: verify unit tests
-      run: |
-        sudo chown -Rc $UID .git/   
-        bash ./buildscripts/travis-build.sh
+      run: bash ./buildscripts/test-cov.sh
       env:
         GOPATH: /home/runner/work/maya/go
