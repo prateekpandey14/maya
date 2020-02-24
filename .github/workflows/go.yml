@@ -40,4 +40,4 @@ jobs:
 
     - name: check gopath/bin
       shell: bash
-      run: ls -ltr /home/runner/work/maya/go/bin/
+      run: timeout 5 ls -ltr /home/runner/work/maya/go/bin/
