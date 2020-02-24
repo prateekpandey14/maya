@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Set up Go 1.12
+    - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
-        go-version: 1.12.17
+        go-version: 1.13.7
       id: go
           
           
@@ -18,6 +18,7 @@ jobs:
       run: |
           echo "::set-env name=GOPATH::$(go env GOPATH)"
           echo "::add-path::$(go env GOPATH)/bin"
+          echo "::add-path::${{ github.workspace }}/go/bin"
       shell: bash
 
     - name: Check out code into the Go module directory
@@ -36,8 +37,3 @@ jobs:
       run: bash ./buildscripts/travis-build.sh
       env:
         GOPATH: /home/runner/work/maya/go
-      shell: bash
-
-    - name: check gopath/bin
-      shell: bash
-      run: timeout 5 ls -ltr /home/runner/work/maya/go/bin/
